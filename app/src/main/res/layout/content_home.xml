@@ -12,8 +12,10 @@
     tools:context="edu.monash.jmare.cvproj_gcs.Home"
     tools:showIn="@layout/activity_home">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <VideoView
+        android:id="@+id/myVideo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true" />
+
 </RelativeLayout>

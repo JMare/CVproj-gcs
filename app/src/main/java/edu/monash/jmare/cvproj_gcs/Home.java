@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.net.Uri;
+import android.widget.MediaController;
+import android.widget.VideoView;
 
 public class Home extends AppCompatActivity {
 
@@ -15,6 +18,11 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        VideoView vidView = (VideoView)findViewById(R.id.myVideo);
+        String vidAddress = "rtsp://118.138.53.101:8554";
+        Uri vidUri = Uri.parse(vidAddress);
+        vidView.setVideoURI(vidUri);
+        vidView.start();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
