@@ -1,5 +1,6 @@
 package edu.monash.jmare.cvproj_gcs;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,21 +9,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.net.Uri;
-import android.widget.MediaController;
-import android.widget.VideoView;
+import android.widget.TextView;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Home extends AppCompatActivity {
 
+    TextView socktestTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        VideoView vidView = (VideoView)findViewById(R.id.myVideo);
-        String vidAddress = "rtsp://118.138.53.101:8554";
-        Uri vidUri = Uri.parse(vidAddress);
-        vidView.setVideoURI(vidUri);
-        vidView.start();
+        MyClientTask myClientTask = new MyClientTask("118.138.49.223",1235);
+        myClientTask.execute();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -34,6 +38,10 @@ public class Home extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        setContentView(R.layout.content_home);
+        socktestTextView = (TextView)findViewById(R.id.socktest);
+
     }
 
     @Override
@@ -57,4 +65,65 @@ public class Home extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-}
+    public class MyClientTask extends AsyncTask<Void, Void, Void> {
+
+  String dstAddress;
+  int dstPort;
+  String response = "";
+
+  MyClientTask(String addr, int port){
+   dstAddress = addr;
+   dstPort = port;
+  }
+
+  @Override
+  protected Void doInBackground(Void... arg0) {
+
+   Socket socket = null;
+
+   try {
+    socket = new Socket(dstAddress, dstPort);
+
+    ByteArrayOutputStream byteArrayOutputStream =
+                  new ByteArrayOutputStream(1024);
+    byte[] buffer = new byte[1024];
+
+    int bytesRead;
+    InputStream inputStream = socket.getInputStream();
+
+    /*
+     * notice:
+     * inputStream.read() will block if no data return
+     */
+             while ((bytesRead = inputStream.read(buffer)) != -1){
+                 byteArrayOutputStream.write(buffer, 0, bytesRead);
+                 response += byteArrayOutputStream.toString("UTF-8");
+             }
+
+   } catch (UnknownHostException e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+    response = "UnknownHostException: " + e.toString();
+   } catch (IOException e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+    response = "IOException: " + e.toString();
+   }finally{
+    if(socket != null){
+     try {
+      socket.close();
+     } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+     }
+    }
+   }
+   return null;
+  }
+
+  @Override
+  protected void onPostExecute(Void result) {
+   socktestTextView.setText(response);
+   super.onPostExecute(result);
+  }
+}};
