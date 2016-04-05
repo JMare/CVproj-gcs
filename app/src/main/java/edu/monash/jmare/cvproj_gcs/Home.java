@@ -26,20 +26,10 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         setContentView(R.layout.content_home);
         socktestTextView = (TextView)findViewById(R.id.socktest);
-        Sockethandler socketobject = new Sockethandler("118.138.40.62",13,socktestTextView);
+        Sockethandler socketobject = new Sockethandler("118.138.44.131",13,socktestTextView);
         socketobject.execute();
 
 

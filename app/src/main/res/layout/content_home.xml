@@ -4,11 +4,17 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_home">
+
+    <Switch
+        android:id="@+id/switchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Toggle Tracking" />
 
     <TextView
         android:id="@+id/socktest"
-        android:layout_width="300dp"
-        android:layout_height="300dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
