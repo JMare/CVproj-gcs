@@ -4,9 +4,13 @@ package edu.monash.jmare.cvproj_gcs;
  * Created by james on 30/03/16.
  */
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import android.os.AsyncTask;
@@ -33,20 +37,17 @@ public class Sockethandler extends AsyncTask<Void, Void, Void> {
       try {
          socket = new Socket(dstAddress, dstPort);
 
-         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(
-               1024);
-         byte[] buffer = new byte[1024];
+         BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(socket.getOutputStream()));
+                // Write output
+                writer.write("STX010HRT1111111111ETX");
+                writer.flush();
 
-         int bytesRead;
-         InputStream inputStream = socket.getInputStream();
+        InputStream stream = socket.getInputStream();
+        byte[] data = new byte[15];
+        int count = stream.read(data);
+        response = new String(data, "UTF-8");
 
-         /*
-          * notice: inputStream.read() will block if no data return
-          */
-         while ((bytesRead = inputStream.read(buffer)) != -1) {
-            byteArrayOutputStream.write(buffer, 0, bytesRead);
-            response += byteArrayOutputStream.toString("UTF-8");
-         }
 
       } catch (UnknownHostException e) {
          // TODO Auto-generated catch block

@@ -29,7 +29,7 @@ public class Home extends AppCompatActivity {
 
         setContentView(R.layout.content_home);
         socktestTextView = (TextView)findViewById(R.id.socktest);
-        Sockethandler socketobject = new Sockethandler("118.138.44.131",13,socktestTextView);
+        Sockethandler socketobject = new Sockethandler("192.168.0.72",13,socktestTextView);
         socketobject.execute();
 
 
