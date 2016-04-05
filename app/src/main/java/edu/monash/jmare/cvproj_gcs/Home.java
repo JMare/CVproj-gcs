@@ -25,8 +25,7 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        MyClientTask myClientTask = new MyClientTask("118.138.49.223",1235);
-        myClientTask.execute();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -38,9 +37,11 @@ public class Home extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
         setContentView(R.layout.content_home);
         socktestTextView = (TextView)findViewById(R.id.socktest);
+        Sockethandler socketobject = new Sockethandler("118.138.40.62",13,socktestTextView);
+        socketobject.execute();
+
 
     }
 
@@ -65,7 +66,7 @@ public class Home extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public class MyClientTask extends AsyncTask<Void, Void, Void> {
+  /*  public class MyClientTask extends AsyncTask<Void, Void, Void> {
 
   String dstAddress;
   int dstPort;
@@ -91,10 +92,6 @@ public class Home extends AppCompatActivity {
     int bytesRead;
     InputStream inputStream = socket.getInputStream();
 
-    /*
-     * notice:
-     * inputStream.read() will block if no data return
-     */
              while ((bytesRead = inputStream.read(buffer)) != -1){
                  byteArrayOutputStream.write(buffer, 0, bytesRead);
                  response += byteArrayOutputStream.toString("UTF-8");
@@ -126,4 +123,5 @@ public class Home extends AppCompatActivity {
    socktestTextView.setText(response);
    super.onPostExecute(result);
   }
-}};
+}
+        */};
