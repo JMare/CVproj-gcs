@@ -4,12 +4,9 @@ package edu.monash.jmare.cvproj_gcs;
  * Created by james on 30/03/16.
  */
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -40,11 +37,13 @@ public class Sockethandler extends AsyncTask<Void, Void, Void> {
          BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream()));
                 // Write output
-                writer.write("STX010HRT1111111111ETX");
+                writer.write("SHX010HRTEHX");
                 writer.flush();
+                 writer.write("SMX010101101EMX");
+                 writer.flush();
 
         InputStream stream = socket.getInputStream();
-        byte[] data = new byte[15];
+        byte[] data = new byte[12];
         int count = stream.read(data);
         response = new String(data, "UTF-8");
 
@@ -59,12 +58,12 @@ public class Sockethandler extends AsyncTask<Void, Void, Void> {
          response = "IOException: " + e.toString();
       } finally {
          if (socket != null) {
-            try {
-               socket.close();
-            } catch (IOException e) {
+           // try {
+              // socket.close();
+           // } catch (IOException e) {
                // TODO Auto-generated catch block
-               e.printStackTrace();
-            }
+            //   e.printStackTrace();
+           // }
          }
       }
       return null;
