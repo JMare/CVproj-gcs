@@ -7,19 +7,20 @@
     tools:showIn="@layout/activity_home">
 
     <Button xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/button_connect"
+        android:id="@+id/button_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Connect"
-        android:onClick="connectSocket" />
+        android:text="STOP"
+        android:onClick="stopTracking" />
 
-    <Switch
-        android:id="@+id/switchButton"
+   <Button xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/button_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Toggle Tracking" />
+        android:text="START"
+        android:onClick="startTracking" />
 
     <TextView
         android:id="@+id/socktest"

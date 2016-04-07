@@ -19,11 +19,12 @@ public class Sockethandler extends AsyncTask<Void, Void, Void> {
    int dstPort;
    String response = "";
    TextView textResponse;
-
-   Sockethandler(String addr, int port, TextView textResponse) {
+    int onoroff;
+   Sockethandler(String addr, int port, TextView textResponse, int toggle) {
       dstAddress = addr;
       dstPort = port;
       this.textResponse = textResponse;
+       onoroff = toggle;
    }
 
    @Override
@@ -37,10 +38,15 @@ public class Sockethandler extends AsyncTask<Void, Void, Void> {
          BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream()));
                 // Write output
-                writer.write("SHX010HRTEHX");
+                writer.write("SHX001TOGEHX");
                 writer.flush();
-                 writer.write("SMX010101101EMX");
-                 writer.flush();
+          if(onoroff == 1) {
+              writer.write("SMX1EMX");
+              writer.flush();
+          } else {
+              writer.write("SMX0EMX");
+              writer.flush();
+          }
 
         InputStream stream = socket.getInputStream();
         byte[] data = new byte[12];
@@ -58,12 +64,12 @@ public class Sockethandler extends AsyncTask<Void, Void, Void> {
          response = "IOException: " + e.toString();
       } finally {
          if (socket != null) {
-           // try {
-              // socket.close();
-           // } catch (IOException e) {
-               // TODO Auto-generated catch block
-            //   e.printStackTrace();
-           // }
+            try {
+             socket.close();
+            } catch (IOException e) {
+             // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
          }
       }
       return null;

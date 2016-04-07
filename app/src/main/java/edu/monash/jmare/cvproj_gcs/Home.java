@@ -10,6 +10,10 @@ import android.widget.TextView;
 public class Home extends AppCompatActivity {
 
     TextView socktestTextView;
+    String ipAddr = "192.168.0.72";
+    int port = 13;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,33 +22,23 @@ public class Home extends AppCompatActivity {
 
     }
 
-    /** Called when the user touches the button */
-    public void connectSocket(View view) {
+    /**
+     * Called when the user touches the button
+     */
+    public void stopTracking(View view) {
         // Do something in response to button click
         setContentView(R.layout.content_home);
-        socktestTextView = (TextView)findViewById(R.id.socktest);
-        Sockethandler socketobject = new Sockethandler("118.138.20.129",13,socktestTextView);
+        socktestTextView = (TextView) findViewById(R.id.socktest);
+        Sockethandler socketobject = new Sockethandler(ipAddr, port, socktestTextView, 0);
         socketobject.execute();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
+    public void startTracking(View view) {
+        // Do something in response to button click
+        setContentView(R.layout.content_home);
+        socktestTextView = (TextView) findViewById(R.id.socktest);
+        Sockethandler socketobject = new Sockethandler(ipAddr, port, socktestTextView, 1);
+        socketobject.execute();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+}
