@@ -38,13 +38,13 @@ public class Sockethandler extends AsyncTask<Void, Void, Void> {
          BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream()));
                 // Write output
-                writer.write("SHX001TOGEHX");
+                writer.write("SHX006DOCEHX");
                 writer.flush();
           if(onoroff == 1) {
-              writer.write("SMX1EMX");
+              writer.write("SMXTOG001EMX");
               writer.flush();
           } else {
-              writer.write("SMX0EMX");
+              writer.write("SMXTOG000EMX");
               writer.flush();
           }
 
