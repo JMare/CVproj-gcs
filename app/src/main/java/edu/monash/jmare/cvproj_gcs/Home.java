@@ -8,39 +8,32 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
-
 
 public class Home extends AppCompatActivity {
 
     SocketService mBoundService = null;
     boolean mIsBound = false;
     private ServiceConnection mConnection = new ServiceConnection() {
-            //EDITED PART
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        // TODO Auto-generated method stub
-         mBoundService = ((SocketService.LocalBinder)service).getService();
+                //EDITED PART
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // TODO Auto-generated method stub
+             mBoundService = ((SocketService.MyBinder)service).getService();
 
-    }
+        }
 
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        // TODO Auto-generated method stub
-         mBoundService = null;
-    }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // TODO Auto-generated method stub
+             mBoundService = null;
+        }
 
-  };
+    };
 
 
    private void doBindService() {
        bindService(new Intent(Home.this, SocketService.class), mConnection, Context.BIND_AUTO_CREATE);
        mIsBound = true;
-       if(mBoundService!=null){
-       mBoundService.IsBoundable();
-       }
    }
 
 
@@ -52,42 +45,49 @@ public class Home extends AppCompatActivity {
        }
    }
 
-    TextView socktestTextView;
-    String ipAddr = "118.138.55.249";
-    int port = 13;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
- startService(new Intent(Home.this,SocketService.class));
-        doBindService();
-
+        if(mBoundService == null) {
+            startService(new Intent(Home.this, SocketService.class));
+        }
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(mBoundService != null){
+            stopService(new Intent(Home.this, SocketService.class));
+        }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        if(!mIsBound){
+            doBindService();
+        }
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        if(mIsBound){
+            doUnbindService();
+        }
+    }
     /**
      * Called when the user touches the button
      */
     public void stopTracking(View view) {
-        // Do something in response to button click
-     //   setContentView(R.layout.content_home);
-     //   socktestTextView = (TextView) findViewById(R.id.socktest);
-     //   Sockethandler socketobject = new Sockethandler(ipAddr, port, socktestTextView, 0);
-      if(mBoundService!=null)
-        {
-            mBoundService.sendMessage("SHX006DOCEHX");
-        }//   socketobject.execute();
+        mBoundService.sendMessage("SHX006DOCEHX");
+        mBoundService.sendMessage("SMXTOG000EMX");
     }
 
     public void startTracking(View view) {
-        // Do something in response to button click
-     //   setContentView(R.layout.content_home);
-     //   socktestTextView = (TextView) findViewById(R.id.socktest);
-     //   Sockethandler socketobject = new Sockethandler(ipAddr, port, socktestTextView, 1);
-     //   socketobject.execute();
-        startService(new Intent(Home.this,SocketService.class));
-        doBindService();
+        mBoundService.sendMessage("SHX006DOCEHX");
+        mBoundService.sendMessage("SMXTOG001EMX");
     }
 
 }

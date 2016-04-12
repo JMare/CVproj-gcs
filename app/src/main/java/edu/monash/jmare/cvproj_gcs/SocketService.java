@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Chronometer;
 import android.widget.Toast;
 
 import java.io.BufferedWriter;
@@ -18,112 +19,116 @@ import java.net.Socket;
  */
 
 public class SocketService extends Service {
-public static final String SERVERIP = "118.138.55.249"; //your computer IP address should be written here
-public static final int SERVERPORT = 13;
-PrintWriter out;
-Socket socket;
-InetAddress serverAddr;
+    public static final String SERVERIP = "192.168.0.8"; //your computer IP address should be written here
+    public static final int SERVERPORT = 13;
+    PrintWriter out;
+    Socket socket;
+    InetAddress serverAddr;
+    private static String LOG_TAG = "BoundService";
+    private IBinder mBinder = new MyBinder();
 
-@Override
-public IBinder onBind(Intent intent) {
-// TODO Auto-generated method stub
-System.out.println("I am in Ibinder onBind method");
-  return myBinder;
-}
-
-private final IBinder myBinder = new LocalBinder();
-
-public class LocalBinder extends Binder {
-    public SocketService getService() {
-        System.out.println("I am in Localbinder ");
-        return SocketService.this;
-
+    public class MyBinder extends Binder {
+        SocketService getService() {
+            return SocketService.this;
+        }
     }
-}
-
-@Override
-public void onCreate() {
-    super.onCreate();
-    System.out.println("I am in on create");
-}
-
-public void IsBoundable(){
-    Toast.makeText(this,"I bind like butter", Toast.LENGTH_LONG).show();
-}
-
-public void sendMessage(String message){
-    if (out != null && !out.checkError()) {
-        System.out.println("in sendMessage"+message);
-        out.println(message);
-        out.flush();
+    @Override
+    public IBinder onBind(Intent intent) {
+        Log.v(LOG_TAG, "in onBind");
+        return mBinder;
     }
-}
-
-@Override
-public int onStartCommand(Intent intent,int flags, int startId){
-    super.onStartCommand(intent, flags, startId);
-    System.out.println("I am in on start");
-  //  Toast.makeText(this,"Service created ...", Toast.LENGTH_LONG).show();
-    Runnable connect = new connectSocket();
-    new Thread(connect).start();
-    return START_STICKY;
-}
-
-
-class connectSocket implements Runnable {
 
     @Override
-    public void run() {
+    public void onRebind(Intent intent) {
+        Log.v(LOG_TAG, "in onRebind");
+        super.onRebind(intent);
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.v(LOG_TAG, "in onUnbind");
+        return true;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.v(LOG_TAG, "in onCreate");
+        Toast.makeText(this,"Service created", Toast.LENGTH_LONG).show();
+    }
+
+    public void sendMessage(String message){
+        if (out != null && !out.checkError()) {
+            System.out.println("in sendMessage "+message);
+            out.print(message);
+            out.flush();
+        }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent,int flags, int startId){
+        super.onStartCommand(intent, flags, startId);
+        System.out.println("I am in on start");
+        Runnable connect = new connectSocket();
+        new Thread(connect).start();
+        return START_STICKY;
+    }
 
 
-        try {
-             //here you must put your computer's IP address.
-            serverAddr = InetAddress.getByName(SERVERIP);
-            Log.e("TCP Client", "C: Connecting...");
-            //create a socket to make the connection with the server
+    class connectSocket implements Runnable {
 
-            socket = new Socket(serverAddr, SERVERPORT);
-
-             try {
+        @Override
+        public void run() {
 
 
-                 //send the message to the server
-                 out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+            try {
+                 //here you must put your computer's IP address.
+                serverAddr = InetAddress.getByName(SERVERIP);
+                Log.e("TCP Client", "C: Connecting...");
+                //create a socket to make the connection with the server
+
+                socket = new Socket(serverAddr, SERVERPORT);
+
+                 try {
 
 
-                 Log.e("TCP Client", "C: Sent.");
+                     //send the message to the server
+                     out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 
-                 Log.e("TCP Client", "C: Done.");
+
+                     Log.e("TCP Client", "C: Sent.");
+
+                     Log.e("TCP Client", "C: Done.");
 
 
-                }
-             catch (Exception e) {
+                    }
+                 catch (Exception e) {
 
-                 Log.e("TCP", "S: Error", e);
+                     Log.e("TCP", "S: Error", e);
 
-             }
-        } catch (Exception e) {
+                 }
+            } catch (Exception e) {
 
-            Log.e("TCP", "C: Error", e);
+                Log.e("TCP", "C: Error", e);
+
+            }
 
         }
 
     }
 
-}
 
-
-@Override
-public void onDestroy() {
-    super.onDestroy();
-      try {
-          socket.close();
-      } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+          try {
+              socket.close();
+          } catch (Exception e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+          }
+          socket = null;
       }
-      socket = null;
-  }
 
 
 }
