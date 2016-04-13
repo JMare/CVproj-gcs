@@ -16,6 +16,7 @@
         <activity
             android:name=".MainView"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="landscape"
             android:label="@string/title_activity_main_view">
             <intent-filter>
             <action android:name="android.intent.action.MAIN" />

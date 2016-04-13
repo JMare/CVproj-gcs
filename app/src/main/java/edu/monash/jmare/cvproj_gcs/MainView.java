@@ -17,12 +17,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Switch;
 
 public class MainView extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     SocketService mBoundService = null;
     boolean mIsBound = false;
+    private Switch autoExposure;
     private ServiceConnection mConnection = new ServiceConnection() {
         //EDITED PART
         @Override
@@ -70,6 +72,7 @@ public class MainView extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -149,15 +152,11 @@ public class MainView extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_control) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_settings) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_advset) {
 
         }
 

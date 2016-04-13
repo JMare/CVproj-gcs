@@ -30,4 +30,5 @@
         android:text="START"
         android:onClick="startTracking" />
 
+
 </RelativeLayout>
