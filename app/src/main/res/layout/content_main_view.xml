@@ -12,23 +12,31 @@
     tools:context="edu.monash.jmare.cvproj_gcs.MainView"
     tools:showIn="@layout/app_bar_main_view">
 
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/button_stop"
-        android:layout_alignParentTop="true"
+    <Switch
+        android:id="@+id/switch_gimEnable"
+        android:padding="20px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="STOP"
-        android:onClick="stopTracking" />
-
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/button_start"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/button_stop"
+        android:checked="false"
+        android:text="Gimbal Movement"/>
+
+      <TextView
+          android:id="@+id/textview_controlMode"
+          android:padding="20px"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="START"
-        android:onClick="startTracking" />
+          android:layout_below="@+id/switch_gimEnable"
+          android:layout_alignParentLeft="true"
+        android:text="Control Mode" />
 
+    <Spinner
+        android:id="@+id/spinner_controlMode"
+        android:padding="20px"
+        android:layout_toRightOf="@id/textview_controlMode"
+        android:layout_below="@+id/switch_gimEnable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

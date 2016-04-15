@@ -17,6 +17,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.Spinner;
 import android.widget.Switch;
 
 public class MainView extends AppCompatActivity
@@ -24,7 +27,7 @@ public class MainView extends AppCompatActivity
 
     SocketService mBoundService = null;
     boolean mIsBound = false;
-    private Switch autoExposure;
+    private Switch switch_gimEnable;
     private ServiceConnection mConnection = new ServiceConnection() {
         //EDITED PART
         @Override
@@ -64,6 +67,34 @@ public class MainView extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+          switch_gimEnable = (Switch) findViewById(R.id.switch_gimEnable);
+
+          //set the switch to ON
+          switch_gimEnable.setChecked(true);
+          //attach a listener to check for changes in state
+          switch_gimEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+           @Override
+           public void onCheckedChanged(CompoundButton buttonView,
+             boolean isChecked) {
+
+            if(isChecked){
+                mBoundService.sendMessage("SHX006DOCEHX");
+                mBoundService.sendMessage("SMXTOG001EMX");
+            }else{
+                mBoundService.sendMessage("SHX006DOCEHX");
+                mBoundService.sendMessage("SMXTOG000EMX");
+            }
+           }});
+
+        Spinner spinner_controlMode = (Spinner) findViewById(R.id.spinner_controlMode);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.controlModes, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner_controlMode.setAdapter(adapter);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -156,15 +187,4 @@ public class MainView extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    public void stopTracking(View view) {
-        mBoundService.sendMessage("SHX006DOCEHX");
-        mBoundService.sendMessage("SMXTOG000EMX");
-    }
-
-    public void startTracking(View view) {
-        mBoundService.sendMessage("SHX006DOCEHX");
-        mBoundService.sendMessage("SMXTOG001EMX");
-    }
-
 }
