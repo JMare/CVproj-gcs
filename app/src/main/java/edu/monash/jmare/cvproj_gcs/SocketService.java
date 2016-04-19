@@ -2,12 +2,16 @@ package edu.monash.jmare.cvproj_gcs;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -18,9 +22,10 @@ import java.net.Socket;
  */
 
 public class SocketService extends Service {
-    public static final String SERVERIP = "118.138.8.59"; //your computer IP address should be written here
+    public static final String SERVERIP = "192.168.0.8"; //your computer IP address should be written here
     public static final int SERVERPORT = 13;
     PrintWriter out;
+    BufferedReader in;
     Socket socket;
     InetAddress serverAddr;
     private static String LOG_TAG = "BoundService";
@@ -64,6 +69,35 @@ public class SocketService extends Service {
         }
     }
 
+   public class getParams extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+             String total = "";
+                try{
+                while (total.length() < 160 && total.endsWith("EHX") == false) { // if the string is less then 160 chars long and not ending with !!
+
+                    int c = in.read(); // read next char in buffer
+                    if (c == -1) break; // in.read() return -1 if the end of the buffer was reached
+                    total += (char) c; // add char to string
+                }
+                } catch(IOException e) {
+            }
+        return total;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getApplicationContext(),result, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected void onProgressUpdate(String... values) {}
+    }
+
     @Override
     public int onStartCommand(Intent intent,int flags, int startId){
         super.onStartCommand(intent, flags, startId);
@@ -94,6 +128,7 @@ public class SocketService extends Service {
                      //send the message to the server
                      out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 
+                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                      Log.e("TCP Client", "C: Sent.");
 

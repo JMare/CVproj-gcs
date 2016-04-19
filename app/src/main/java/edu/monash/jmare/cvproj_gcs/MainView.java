@@ -79,8 +79,10 @@ public class MainView extends AppCompatActivity
              boolean isChecked) {
 
             if(isChecked){
-                mBoundService.sendMessage("SHX006DOCEHX");
-                mBoundService.sendMessage("SMXTOG001EMX");
+                mBoundService.sendMessage("SHX000PRQEHX");
+                mBoundService.new getParams().execute();
+                //mBoundService.sendMessage("SHX006DOCEHX");
+                //mBoundService.sendMessage("SMXTOG001EMX");
             }else{
                 mBoundService.sendMessage("SHX006DOCEHX");
                 mBoundService.sendMessage("SMXTOG000EMX");
