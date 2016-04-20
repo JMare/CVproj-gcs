@@ -105,10 +105,6 @@ public class MainView extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        if(mBoundService == null) {
-            startService(new Intent(MainView.this, SocketService.class));
-        }
     }
 
     @Override
