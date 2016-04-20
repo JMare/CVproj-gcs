@@ -22,7 +22,7 @@ import java.net.Socket;
  */
 
 public class SocketService extends Service {
-    public static final String SERVERIP = "192.168.0.8"; //your computer IP address should be written here
+    public static final String SERVERIP = "192.168.0.5"; //your computer IP address should be written here
     public static final int SERVERPORT = 13;
     PrintWriter out;
     BufferedReader in;
@@ -69,21 +69,35 @@ public class SocketService extends Service {
         }
     }
 
+    private String readUntil(String untilWhat){
+        //Cant be done on the UI thread
+        String total = "";
+        try{
+            while (total.length() < 160 && total.endsWith(untilWhat) == false) { // if the string is less then 160 chars long and not ending with !!
+
+                int c = in.read(); // read next char in buffer
+                if (c == -1) break; // in.read() return -1 if the end of the buffer was reached
+                total += (char) c; // add char to string
+            }
+        } catch(IOException e) {
+
+        }
+
+        return total;
+    }
+
    public class getParams extends AsyncTask<String, String, String> {
 
         @Override
         protected String doInBackground(String... params) {
-             String total = "";
-                try{
-                while (total.length() < 160 && total.endsWith("EHX") == false) { // if the string is less then 160 chars long and not ending with !!
+            //Call read
+            String paramsHeader = readUntil("EHX");
+            String paramsBody = readUntil("EMX");
 
-                    int c = in.read(); // read next char in buffer
-                    if (c == -1) break; // in.read() return -1 if the end of the buffer was reached
-                    total += (char) c; // add char to string
-                }
-                } catch(IOException e) {
-            }
-        return total;
+            if (paramsHeader.equals("SHX087PRPEHX")) {
+                //handle the actual parameters in the body
+                return paramsBody;
+            } else return "bad";
         }
 
         @Override

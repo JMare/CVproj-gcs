@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">CVproj-gcs</string>
     <string name="action_settings">Settings</string>
+    <string name="action_download_params">Download</string>
+    <string name="action_upload_params">Upload</string>
     <string name="title_activity_main_view">Laser-GCS</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

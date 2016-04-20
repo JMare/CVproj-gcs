@@ -6,4 +6,14 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_download_params"
+        android:orderInCategory="100"
+        android:title="@string/action_download_params"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_upload_params"
+        android:orderInCategory="100"
+        android:title="@string/action_upload_params"
+        app:showAsAction="ifRoom" />
 </menu>

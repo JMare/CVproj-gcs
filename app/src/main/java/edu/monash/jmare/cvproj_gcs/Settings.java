@@ -1,7 +1,10 @@
 package edu.monash.jmare.cvproj_gcs;
 
-import android.content.Intent;
+import android.content.ComponentName;
+import android.content.Context; import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -13,9 +16,44 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Switch;
 
 public class Settings extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    SocketService mBoundService = null;
+    boolean mIsBound = false;
+    private ServiceConnection mConnection = new ServiceConnection() {
+        //EDITED PART
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // TODO Auto-generated method stub
+            mBoundService = ((SocketService.MyBinder)service).getService();
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // TODO Auto-generated method stub
+            mBoundService = null;
+        }
+
+    };
+
+
+    private void doBindService() {
+        bindService(new Intent(Settings.this, SocketService.class), mConnection, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+
+    private void doUnbindService() {
+        if (mIsBound) {
+            // Detach our existing connection.
+            unbindService(mConnection);
+            mIsBound = false;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +70,22 @@ public class Settings extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        if(!mIsBound){
+            doBindService();
+        }
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        if(mIsBound){
+            doUnbindService();
+        }
     }
 
     @Override
@@ -60,6 +114,12 @@ public class Settings extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        } else if(id == R.id.action_download_params) {
+            mBoundService.sendMessage("SHX000PRQEHX");
+            mBoundService.new getParams().execute();
+            return true;
+        } else if(id == R.id.action_upload_params){
             return true;
         }
 
