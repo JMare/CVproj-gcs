@@ -7,6 +7,11 @@ import android.content.Intent;
  * Created by james on 4/20/16.
  */
 public class GlobalHandler extends Application {
+
+
+   public ParamLocal _paramLocal;
+
+
     @Override
     public void onCreate() {
         super.onCreate();

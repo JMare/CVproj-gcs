@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -22,7 +24,9 @@ import java.net.Socket;
  */
 
 public class SocketService extends Service {
-    public static final String SERVERIP = "192.168.0.5"; //your computer IP address should be written here
+
+    GlobalHandler _globalHandler;
+    public static final String SERVERIP = "192.168.0.9"; //your computer IP address should be written here
     public static final int SERVERPORT = 13;
     PrintWriter out;
     BufferedReader in;
@@ -30,6 +34,16 @@ public class SocketService extends Service {
     InetAddress serverAddr;
     private static String LOG_TAG = "BoundService";
     private IBinder mBinder = new MyBinder();
+
+    public static final String
+        ACTION_UPDATE_PARAMS = SocketService.class.getName(),
+        EXTRA_PARAM = "extra_param";
+
+    private void sendBroadcastMessage(ParamLocal paramLocal){
+        Intent intent = new Intent(ACTION_UPDATE_PARAMS);
+        intent.putExtra(EXTRA_PARAM, paramLocal);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
 
     public class MyBinder extends Binder {
         SocketService getService() {
@@ -102,7 +116,9 @@ public class SocketService extends Service {
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getApplicationContext(),result, Toast.LENGTH_LONG).show();
+            ParamLocal tmp_Param_Local = new ParamLocal();
+            tmp_Param_Local.parseString(result);
+            sendBroadcastMessage(tmp_Param_Local);
         }
 
         @Override
@@ -116,8 +132,10 @@ public class SocketService extends Service {
     public int onStartCommand(Intent intent,int flags, int startId){
         super.onStartCommand(intent, flags, startId);
         System.out.println("I am in on start");
+        _globalHandler = (GlobalHandler) getApplicationContext();
         Runnable connect = new connectSocket();
         new Thread(connect).start();
+
         return START_STICKY;
     }
 
