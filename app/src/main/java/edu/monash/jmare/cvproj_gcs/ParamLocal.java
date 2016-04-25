@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by james on 25/04/16.
+ * This class not great, need to use JSON for all this so it can be pretty
  */
 public class ParamLocal implements Serializable {
     public int greyThreshMin;
@@ -98,5 +99,40 @@ public class ParamLocal implements Serializable {
         gimGainY = Integer.parseInt(paramRaw.substring(start, start+3));
         start = start+3;
         gimMovementInt = Integer.parseInt(paramRaw.substring(start, start+3));
+    }
+
+    public String packString(){
+        String packedString = "SMX" +
+             greyThreshMin +
+             greyThreshMax +
+             greyErodePix+
+             greyDilatePix+
+             greyErodeIterations+
+             greyDilateIterations +
+             candMaxNumObjects +
+             candMinObjectArea +
+             candMaxObjectArea +
+             checkSquareSize +
+             checkHMin +
+             checkHMax +
+             checkSMin +
+             checkSMax +
+             checkMinGreen +
+             calcScorePercentColor +
+             calcScorePercentColorExtra +
+             calcScorePercentSize +
+             calcScorePercentCircle +
+             calcAreaExpected +
+             calcAreaMaxDiff +
+             calcMinPairDist +
+             calcMaxPairDist +
+             masterMinScoreNonPair +
+             masterMinScorePair +
+             masterPairScoreBoost +
+             gimGainX +
+             gimGainY +
+             gimMovementInt +
+                "EMX";
+        return packedString;
     }
 }

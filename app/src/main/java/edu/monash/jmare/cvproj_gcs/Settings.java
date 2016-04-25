@@ -27,6 +27,13 @@ import java.net.Socket;
 public class Settings extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    EditText textGrThreshMin;
+    EditText textGrThreshMax;
+    EditText textGrErodePix;
+    EditText textGrDilatePix;
+    EditText textGrErodeIter;
+    EditText textGrDilateIter;
+
     GlobalHandler _globalHandler;
     SocketService mBoundService = null;
     boolean mIsBound = false;
@@ -67,12 +74,13 @@ public class Settings extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        final EditText textGrThreshMin = (EditText) findViewById(R.id.edit_greyThreshMin);
-        final EditText textGrThreshMax = (EditText) findViewById(R.id.edit_greyThreshMax);
-        final EditText textGrErodePix = (EditText) findViewById(R.id.edit_greyErodePix);
-        final EditText textGrDilatePix = (EditText) findViewById(R.id.edit_greyDilatePix);
-        final EditText textGrErodeIter= (EditText) findViewById(R.id.edit_greyErodeIter);
-        final EditText textGrDilateIter = (EditText) findViewById(R.id.edit_greyDilateIter);
+        //find all the textboxes to populate
+        textGrThreshMin = (EditText) findViewById(R.id.edit_greyThreshMin);
+        textGrThreshMax = (EditText) findViewById(R.id.edit_greyThreshMax);
+        textGrErodePix = (EditText) findViewById(R.id.edit_greyErodePix);
+        textGrDilatePix = (EditText) findViewById(R.id.edit_greyDilatePix);
+        textGrErodeIter= (EditText) findViewById(R.id.edit_greyErodeIter);
+        textGrDilateIter = (EditText) findViewById(R.id.edit_greyDilateIter);
         setSupportActionBar(toolbar);
 
         _globalHandler = (GlobalHandler) getApplicationContext();
@@ -90,6 +98,7 @@ public class Settings extends AppCompatActivity
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
+                        //we have been sent parameters serialized from the service
                         _globalHandler._paramLocal = (ParamLocal)intent.getSerializableExtra(SocketService.EXTRA_PARAM);
                         textGrThreshMin.setText(String.valueOf(_globalHandler._paramLocal.greyThreshMin));
                         textGrThreshMax.setText(String.valueOf(_globalHandler._paramLocal.greyThreshMax));
@@ -150,6 +159,10 @@ public class Settings extends AppCompatActivity
             mBoundService.new getParams().execute();
             return true;
         } else if(id == R.id.action_upload_params){
+            readEditedParams();
+            String packedParams = _globalHandler._paramLocal.packString();
+            mBoundService.sendMessage("SHX084PSEEHX");
+            mBoundService.sendMessage(packedParams);
             return true;
         }
 
@@ -177,5 +190,14 @@ public class Settings extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void readEditedParams(){
+     _globalHandler._paramLocal.greyThreshMin = Integer.valueOf( textGrThreshMin.getText().toString());
+     _globalHandler._paramLocal.greyThreshMax = Integer.valueOf( textGrThreshMax.getText().toString());
+     _globalHandler._paramLocal.greyErodePix = Integer.valueOf(  textGrErodePix.getText().toString());
+     _globalHandler._paramLocal.greyDilatePix = Integer.valueOf( textGrDilatePix.getText().toString());
+     _globalHandler._paramLocal.greyErodeIterations = Integer.valueOf( textGrErodeIter.getText().toString());
+     _globalHandler._paramLocal.greyDilateIterations = Integer.valueOf(textGrDilateIter.getText().toString());
     }
 }
