@@ -1,6 +1,7 @@
 package edu.monash.jmare.cvproj_gcs;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Created by james on 25/04/16.
@@ -103,35 +104,36 @@ public class ParamLocal implements Serializable {
 
     public String packString(){
         String packedString = "SMX" +
-             greyThreshMin +
-             greyThreshMax +
-             greyErodePix+
-             greyDilatePix+
-             greyErodeIterations+
-             greyDilateIterations +
-             candMaxNumObjects +
-             candMinObjectArea +
-             candMaxObjectArea +
-             checkSquareSize +
-             checkHMin +
-             checkHMax +
-             checkSMin +
-             checkSMax +
-             checkMinGreen +
-             calcScorePercentColor +
-             calcScorePercentColorExtra +
-             calcScorePercentSize +
-             calcScorePercentCircle +
-             calcAreaExpected +
-             calcAreaMaxDiff +
-             calcMinPairDist +
-             calcMaxPairDist +
-             masterMinScoreNonPair +
-             masterMinScorePair +
-             masterPairScoreBoost +
-             gimGainX +
-             gimGainY +
-             gimMovementInt +
+                //this makes each integer into a 3 digit string
+             String.format(Locale.getDefault(), "%03d", greyThreshMin) +
+             String.format(Locale.getDefault(), "%03d", greyThreshMax) +
+             String.format(Locale.getDefault(), "%03d", greyErodePix) +
+             String.format(Locale.getDefault(), "%03d", greyDilatePix) +
+             String.format(Locale.getDefault(), "%03d", greyErodeIterations) +
+             String.format(Locale.getDefault(), "%03d", greyDilateIterations) +
+             String.format(Locale.getDefault(), "%03d", candMaxNumObjects) +
+             String.format(Locale.getDefault(), "%03d", candMinObjectArea) +
+             String.format(Locale.getDefault(), "%03d", candMaxObjectArea) +
+             String.format(Locale.getDefault(), "%03d", checkSquareSize )+
+             String.format(Locale.getDefault(), "%03d", checkHMin )+
+             String.format(Locale.getDefault(), "%03d", checkHMax ) +
+             String.format(Locale.getDefault(), "%03d", checkSMin ) +
+             String.format(Locale.getDefault(), "%03d", checkSMax )+
+             String.format(Locale.getDefault(), "%03d", checkMinGreen) +
+             String.format(Locale.getDefault(), "%03d", calcScorePercentColor) +
+             String.format(Locale.getDefault(), "%03d", calcScorePercentColorExtra) +
+             String.format(Locale.getDefault(), "%03d", calcScorePercentSize )+
+             String.format(Locale.getDefault(), "%03d", calcScorePercentCircle) +
+             String.format(Locale.getDefault(), "%03d", calcAreaExpected )+
+             String.format(Locale.getDefault(), "%03d", calcAreaMaxDiff )+
+             String.format(Locale.getDefault(), "%03d", calcMinPairDist )+
+             String.format(Locale.getDefault(), "%03d", calcMaxPairDist )+
+             String.format(Locale.getDefault(), "%03d", masterMinScoreNonPair) +
+             String.format(Locale.getDefault(), "%03d", masterMinScorePair )+
+             String.format(Locale.getDefault(), "%03d", masterPairScoreBoost) +
+             String.format(Locale.getDefault(), "%03d", gimGainX )+
+             String.format(Locale.getDefault(), "%03d", gimGainY )+
+             String.format(Locale.getDefault(), "%03d", gimMovementInt) +
                 "EMX";
         return packedString;
     }
