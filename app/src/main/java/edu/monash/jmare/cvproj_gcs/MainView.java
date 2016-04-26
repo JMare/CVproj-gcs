@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -28,6 +29,8 @@ public class MainView extends AppCompatActivity
     SocketService mBoundService = null;
     boolean mIsBound = false;
     private Switch switch_gimEnable;
+    private Button butUp, butDown, butLeft, butRight;
+
     private ServiceConnection mConnection = new ServiceConnection() {
         //EDITED PART
         @Override
@@ -87,6 +90,40 @@ public class MainView extends AppCompatActivity
                 mBoundService.sendMessage("SMXTOG000EMX");
             }
            }});
+
+        //attach a listener to the arrow buttons
+        butUp = (Button)findViewById(R.id.butUp);
+        butUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBoundService.sendMessage("SHX006MOVEHX");
+                mBoundService.sendMessage("SMX000010EMX");//x=0 y=10
+            }
+        });
+        butDown = (Button)findViewById(R.id.butDown);
+        butDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBoundService.sendMessage("SHX006MOVEHX");
+                mBoundService.sendMessage("SMX000110EMX");//x=0 y=-10
+            }
+        });
+        butRight = (Button)findViewById(R.id.butRight);
+        butRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBoundService.sendMessage("SHX006MOVEHX");
+                mBoundService.sendMessage("SMX010000EMX");//x=10 y=0
+            }
+        });
+        butLeft = (Button)findViewById(R.id.butLeft);
+        butLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBoundService.sendMessage("SHX006MOVEHX");
+                mBoundService.sendMessage("SMX110000EMX");//x=-10 y=0
+            }
+        });
 
         Spinner spinner_controlMode = (Spinner) findViewById(R.id.spinner_controlMode);
         // Create an ArrayAdapter using the string array and a default spinner layout
