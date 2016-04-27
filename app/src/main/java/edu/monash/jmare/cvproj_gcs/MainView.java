@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -24,7 +25,7 @@ import android.widget.Spinner;
 import android.widget.Switch;
 
 public class MainView extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemSelectedListener{
 
     SocketService mBoundService = null;
     boolean mIsBound = false;
@@ -70,6 +71,9 @@ public class MainView extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
+
           switch_gimEnable = (Switch) findViewById(R.id.switch_gimEnable);
 
           //set the switch to ON
@@ -97,7 +101,7 @@ public class MainView extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 mBoundService.sendMessage("SHX006MOVEHX");
-                mBoundService.sendMessage("SMX000010EMX");//x=0 y=10
+                mBoundService.sendMessage("SMX000105EMX");//x=0 y=10
             }
         });
         butDown = (Button)findViewById(R.id.butDown);
@@ -105,7 +109,7 @@ public class MainView extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 mBoundService.sendMessage("SHX006MOVEHX");
-                mBoundService.sendMessage("SMX000110EMX");//x=0 y=-10
+                mBoundService.sendMessage("SMX000005EMX");//x=0 y=-10
             }
         });
         butRight = (Button)findViewById(R.id.butRight);
@@ -113,7 +117,7 @@ public class MainView extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 mBoundService.sendMessage("SHX006MOVEHX");
-                mBoundService.sendMessage("SMX010000EMX");//x=10 y=0
+                mBoundService.sendMessage("SMX005000EMX");//x=10 y=0
             }
         });
         butLeft = (Button)findViewById(R.id.butLeft);
@@ -121,7 +125,7 @@ public class MainView extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 mBoundService.sendMessage("SHX006MOVEHX");
-                mBoundService.sendMessage("SMX110000EMX");//x=-10 y=0
+                mBoundService.sendMessage("SMX105000EMX");//x=-10 y=0
             }
         });
 
@@ -133,6 +137,7 @@ public class MainView extends AppCompatActivity
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner_controlMode.setAdapter(adapter);
+        spinner_controlMode.setOnItemSelectedListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -221,4 +226,33 @@ public class MainView extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        String selection = String.valueOf(parent.getItemAtPosition(pos));
+
+        if(mBoundService != null) {
+            if (selection.equals("RC")) {
+                //Set Mode RC
+                mBoundService.sendMessage("SHX006DOCEHX");
+                mBoundService.sendMessage("SMXMOD000EMX");
+            } else if (selection.equals("Touch")) {
+                //set mode touch
+                mBoundService.sendMessage("SHX006DOCEHX");
+                mBoundService.sendMessage("SMXMOD001EMX");
+            } else if (selection.equals("Vision")) {
+                //set mode vision
+                mBoundService.sendMessage("SHX006DOCEHX");
+                mBoundService.sendMessage("SMXMOD002EMX");
+            }
+        }
+
+
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
 }

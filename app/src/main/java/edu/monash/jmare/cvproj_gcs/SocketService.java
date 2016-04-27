@@ -26,7 +26,7 @@ import java.net.Socket;
 public class SocketService extends Service {
 
     GlobalHandler _globalHandler;
-    public static final String SERVERIP = "192.168.0.9"; //your computer IP address should be written here
+    public static final String SERVERIP = "118.138.39.48"; //your computer IP address should be written here
     public static final int SERVERPORT = 13;
     PrintWriter out;
     BufferedReader in;
